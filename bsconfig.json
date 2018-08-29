@@ -9,6 +9,7 @@
   "refmt-specs": 3,
   "refmt": 3,
   "bs-dependencies": [
+    "bs-css",
     "reason-react",
     "bs-webapi",
     "bs-fetch",
