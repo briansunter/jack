@@ -35,27 +35,12 @@ module Styles = {
     ])
 };
 
-let styleToString = style =>
-  switch (style) {
-  | Logic.Jack => "Jack"
-  | Logic.Simple(x) => string_of_int(x)
-  | _ => "Other"
-  };
-
-  let suitToSymbol = suit =>
-  switch (suit) {
-  | Logic.Hearts => {js|\u2665|js}
-  | Logic.Clubs =>  {js|\u2663|js}
-  | Logic.Spades => {js|\u2660|js}
-  | Logic.Diamonds => {js|\u2666|js} 
-  };
-
 let make = (~hand,_children) => {
   ...component,
   render: _self =>
     <div className=Styles.hand>
-    {ReasonReact.array(Array.map((h) => {
-      <Card suit=Logic.Hearts cardStyle=Logic.Queen />
+    {ReasonReact.array(Array.map((h:Logic.card) => {
+      <Card suit=h.suit cardStyle=h.style/>
     },hand))}
     </div>,
 };

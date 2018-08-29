@@ -62,11 +62,31 @@ let suits = [Hearts,Clubs,Diamonds,Spades];
 let simpleCards:list(style) = List.map(i => Simple(i),range(2,10));
 let styles:list(style) = List.append([Ace,King,Queen,Jack],simpleCards);
 
-
-let defaultDeck:deck = Belt.List.reduce(suits, [], (a,suit) => List.append(a, Belt.List.map(styles, style => {suit,style})))
+let defaultDeck:deck = Belt.List.reduce(suits, [], (a,suit) => List.append(a, Belt.List.map(styles, style => {suit,style})));
 
 type board = {
   playerHand: hand,
   dealerHand: hand,
 };
 
+type players = Player | Dealer;
+
+let findWinner = board => {
+  let playerTotal = calculateHand(board.playerHand);
+  let dealerTotal = calculateHand(board.dealerHand);
+  if (playerTotal > dealerTotal) {
+    if (playerTotal < maxValue) {
+      Player
+    } else {
+      Dealer
+    }
+  } else {
+    if (dealerTotal < maxValue) {
+      Dealer
+    } else {
+      Player
+    }
+  };
+};
+
+let emptyBoard = {playerHand: [], dealerHand:[]};

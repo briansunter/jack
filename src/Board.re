@@ -35,21 +35,6 @@ module Styles = {
     ])
 };
 
-let styleToString = style =>
-  switch (style) {
-  | Logic.Jack => "Jack"
-  | Logic.Simple(x) => string_of_int(x)
-  | _ => "Other"
-  };
-
-  let suitToSymbol = suit =>
-  switch (suit) {
-  | Logic.Hearts => {js|\u2665|js}
-  | Logic.Clubs =>  {js|\u2663|js}
-  | Logic.Spades => {js|\u2660|js}
-  | Logic.Diamonds => {js|\u2666|js} 
-  };
-
 let make = (~playerHand, ~dealerHand, _children) => {
   ...component,
   render: _self =>
