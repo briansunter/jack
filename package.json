@@ -1,6 +1,6 @@
 {
   "name": "reason-react-simple-starter",
-  "homepage": "http://briansunter.github.io/jack",
+  "homepage": "https://briansunter.github.io/jack",
   "version": "4.0.0",
   "scripts": {
     "build": "npm run clean && npm-run-all build:*",
