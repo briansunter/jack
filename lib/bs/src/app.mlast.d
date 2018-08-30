@@ -1,0 +1,1 @@
+src/app.cmj : src/Board.cmj src/logic.cmj

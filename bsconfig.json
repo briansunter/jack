@@ -1,0 +1,31 @@
+// This is the configuration file used by BuckleScript's build system bsb. Its documentation lives here: http://bucklescript.github.io/bucklescript/docson/#build-schema.json
+// BuckleScript comes with its own parser for bsconfig.json, which is normal JSON, with the extra support of comments and trailing commas.
+{
+  "name": "reason-react-simple-starter",
+  "version": "4.0.0",
+  "reason": {
+    "react-jsx": 2
+  },
+  "refmt-specs": 3,
+  "refmt": 3,
+  "bs-dependencies": [
+    "bs-css",
+    "reason-react",
+    "bs-webapi",
+    "bs-fetch",
+    "@glennsl/bs-json"
+    // add your dependencies here. You'd usually install them normally through `npm install my-dependency`. If my-dependency has a bsconfig.json too, then everything will work seamlessly.
+  ],
+  "bs-dev-dependencies": ["@glennsl/bs-jest", "bs-react-test-renderer"],
+  "sources": [
+    "src",
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ]
+  // "package-specs": [
+  //   "es6",
+  //   "commonjs"
+  // ]
+}

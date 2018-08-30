@@ -1,0 +1,1 @@
+src/Hand.cmj : src/Card.cmj src/logic.cmj

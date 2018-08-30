@@ -1,0 +1,70 @@
+bs_package_flags = -bs-package-name reason-react-simple-starter
+src_root_dir = /Users/bsunter/gdrive/code/reason/jack
+bsc = /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-platform/lib/bsc.exe
+bsdep = /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-platform/lib/bsb_helper.exe
+warnings = -w -30-40+6+7+27+32..39+44+45+101
+bsc_flags = -nostdlib -I '/Users/bsunter/gdrive/code/reason/jack/node_modules/bs-platform/lib/ocaml' -no-alias-deps -color always
+ppx_flags = 
+bs_package_includes = -I /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-css/lib/ocaml -I /Users/bsunter/gdrive/code/reason/jack/node_modules/reason-react/lib/ocaml -I /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-webapi/lib/ocaml -I /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-fetch/lib/ocaml -I /Users/bsunter/gdrive/code/reason/jack/node_modules/@glennsl/bs-json/lib/ocaml
+bs_package_dev_includes = -I /Users/bsunter/gdrive/code/reason/jack/node_modules/@glennsl/bs-jest/lib/ocaml -I /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-react-test-renderer/lib/ocaml
+namespace = 
+bsb_dir_group = 0
+bsc_group_1_includes = -I __tests__
+refmt = /Users/bsunter/gdrive/code/reason/jack/node_modules/bs-platform/lib/refmt.exe
+reason_react_jsx = -ppx '/Users/bsunter/gdrive/code/reason/jack/node_modules/bs-platform/lib/reactjs_jsx_ppx_2.exe'
+refmt_flags = --print binary
+bsc_lib_includes = -I src
+rule build_ast_and_module_sets_from_re
+  command = ${bsc} -pp "${refmt} ${refmt_flags}" ${reason_react_jsx}  ${ppx_flags} ${warnings} ${bsc_flags} -c -o ${out} -bs-syntax-only -bs-binary-ast -impl ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build __tests__/logic_test.mlast : build_ast_and_module_sets_from_re $src_root_dir/__tests__/logic_test.re
+rule build_deps
+  command = ${bsdep} ${namespace} -g ${bsb_dir_group} -MD ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build __tests__/logic_test.mlast.d : build_deps __tests__/logic_test.mlast
+  bsb_dir_group = 1
+rule build_cmj_cmi
+  command = ${bsc} ${bs_package_flags} -bs-assume-no-mli -bs-no-builtin-ppx-ml -bs-no-implicit-include ${bs_package_includes} ${bsc_lib_includes} ${bsc_extra_includes} ${warnings} ${bsc_flags} -o ${out} -c  ${in} $postbuild
+  depfile = ${in}.d
+  description = [34mBuilding[39m [2m${out}[22m
+build __tests__/logic_test.cmj |  $src_root_dir/lib/js/__tests__/logic_test.js __tests__/logic_test.cmi : build_cmj_cmi __tests__/logic_test.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/__tests__
+  bs_package_includes = $bs_package_includes $bs_package_dev_includes
+  bsc_extra_includes = $bsc_group_1_includes
+build src/app.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/app.re
+build src/app.mlast.d : build_deps src/app.mlast
+build src/app.cmj |  $src_root_dir/lib/js/src/app.js src/app.cmi : build_cmj_cmi src/app.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/Card.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Card.re
+build src/Card.mlast.d : build_deps src/Card.mlast
+build src/Card.cmj |  $src_root_dir/lib/js/src/Card.js src/Card.cmi : build_cmj_cmi src/Card.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/Hand.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Hand.re
+build src/Hand.mlast.d : build_deps src/Hand.mlast
+build src/Hand.cmj |  $src_root_dir/lib/js/src/Hand.js src/Hand.cmi : build_cmj_cmi src/Hand.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/main.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/main.re
+build src/main.mlast.d : build_deps src/main.mlast
+build src/main.cmj |  $src_root_dir/lib/js/src/main.js src/main.cmi : build_cmj_cmi src/main.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/Board.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Board.re
+build src/Board.mlast.d : build_deps src/Board.mlast
+build src/Board.cmj |  $src_root_dir/lib/js/src/Board.js src/Board.cmi : build_cmj_cmi src/Board.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/logic.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/logic.re
+build src/logic.mlast.d : build_deps src/logic.mlast
+build src/logic.cmj |  $src_root_dir/lib/js/src/logic.js src/logic.cmi : build_cmj_cmi src/logic.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/moment.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/moment.re
+build src/moment.mlast.d : build_deps src/moment.mlast
+build src/moment.cmj |  $src_root_dir/lib/js/src/moment.js src/moment.cmi : build_cmj_cmi src/moment.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build build.ninja : phony  ||  src/moment.mlast.d src/logic.mlast.d src/Board.mlast.d src/main.mlast.d src/Hand.mlast.d src/Card.mlast.d src/app.mlast.d __tests__/logic_test.mlast.d
