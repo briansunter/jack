@@ -1,52 +1,42 @@
 type action =
-  | Tick
-  | Click;
+  | Deal
+  | HitMe;
 
-type game = {
-  /* board: Logic.board, */
-  deck: Logic.deck,
-  /* playerBet: int,  */
-};
 
 type state = {
-  time: int,
-  timerId: ref(option(Js.Global.intervalId)),
-  count: int,
-  game: game,
+  game: Logic.game
 };
-
-let res =
-  Js.Promise.(
-    Fetch.fetch("https://www.google.com")
-    |> then_(Fetch.Response.text)
-    |> then_(text => Js.log(text) |> resolve)
-  );
-
-[@bs.val] external alert : string => unit = "alert";
 
 let component = ReasonReact.reducerComponent("MyCounter");
 
+let appReducer = (action, state) => {
+  switch(action) {
+    | Deal => ReasonReact.Update({...state,game:Logic.dealInitialcards(state.game)})
+    | HitMe => ReasonReact.Update({...state,game:Logic.runPlayerTurn(state.game,Logic.Hit)})
+  }
+};
+
 let make = _children => {
   ...component,
-  initialState: () => {time: 0, timerId: ref(None), count: 0, game: {deck: Logic.defaultDeck}},
-  reducer: (action, state) =>
-    switch (action) {
-    | Tick => ReasonReact.Update({...state, time: state.time + 1})
-    | Click =>
-      let oldCount = state.count;
-      let newCount = oldCount + 1;
-      ReasonReact.UpdateWithSideEffects(
-        {...state, count: newCount},
-        (({state: {count}}) => alert({j|Updating counter to $count|j})),
-      );
-    },
-  didMount: self =>
-    self.state.timerId :=
-      Some(Js.Global.setInterval(() => self.send(Tick), 1000)),
-  render: ({send, state: {time, count, game}}) => {
+  initialState: () => {
+    let shuffledDeck = Belt.List.shuffle(Logic.defaultDeck);
+    {game: 
+    {deck: shuffledDeck, board: Logic.emptyBoard, gameState:Logic.NewGame}}},
+  reducer: appReducer,
+  render: ({state: {game},send}) => {
     <div>
-      <Board playerHand=Belt.List.toArray(game.deck) 
-      dealerHand=Belt.List.toArray(Logic.testHand)/>
+      <Board playerHand=(Belt.List.toArray(game.board.playerHand))
+      dealerHand=(Belt.List.toArray(game.board.dealerHand))/>
+      <div>
+      <button onClick=(_ => send(Deal))>
+      (ReasonReact.string("Deal Cards"))
+    </button> 
+      </div>
+      <div>
+      <button onClick=(_ => send(HitMe))>
+      (ReasonReact.string("Hit Me"))
+    </button> 
+      </div>
     </div>;
   },
 };

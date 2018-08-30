@@ -69,6 +69,26 @@ type board = {
   dealerHand: hand,
 };
 
+let emptyBoard = {playerHand: [], dealerHand:[]};
+
+type gameState = NewGame | PlayerTurn | PlayerBust | PlayerWin | DealerWin;
+
+type game = {
+  board,
+  deck,
+  gameState
+};
+
+let dealInitialcards = game => {
+  let [playerCard1, playerCard2, dealerCard, ...restDeck] = game.deck;
+  {...game, 
+    deck:restDeck,
+    gameState: PlayerTurn,
+      board:{
+    playerHand:[playerCard1,playerCard2],
+    dealerHand: [dealerCard]}};
+};
+
 type players = Player | Dealer;
 
 let findWinner = board => {
@@ -89,4 +109,23 @@ let findWinner = board => {
   };
 };
 
-let emptyBoard = {playerHand: [], dealerHand:[]};
+let dealerHitValue = 17;
+
+let dealerCanPlay = hand => (calculateHand(hand) <= dealerHitValue);
+
+type actions = Hit | Stand | Split;
+
+let runPlayerTurn = (game:game, action) => {
+    switch(action) {
+    | Hit => {
+      let [newCard, ...restDeck] = game.deck;
+      let newPlayerHand =[newCard, ...game.board.playerHand]; 
+      if (calculateHand(newPlayerHand) <= maxValue) {
+        {...game, deck:restDeck, gameState: PlayerTurn, board:{...game.board, playerHand:newPlayerHand}}
+      } else {
+        {...game, deck:restDeck, gameState: PlayerBust, board:{...game.board, playerHand:newPlayerHand}}
+      };
+      }
+      | _ => game;
+    }
+    };

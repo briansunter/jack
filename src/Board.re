@@ -8,6 +8,7 @@ module Styles = {
     flexDirection(column),
     justifyContent(center),
     backgroundColor(darkolivegreen),
+    minHeight(px(500)),
     margin(px(10))
  ]);
 
