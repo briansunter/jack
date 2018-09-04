@@ -17,7 +17,6 @@ module.exports = Merge(CommonConfig, {
             'process.env': {
                 'NODE_ENV': JSON.stringify('production')
             }
-        }),
-        new ShakePlugin(), // https://github.com/indutny/webpack-common-shake/issues/16
+        })
     ]
 })

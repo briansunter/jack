@@ -25,3 +25,4 @@ lib/bs
 .merlin
 .DS_Store
 node_modules
+build/bundle/main.js
