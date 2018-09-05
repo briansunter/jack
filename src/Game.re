@@ -1,4 +1,4 @@
-let component = ReasonReact.statelessComponent("Board");
+let component = ReasonReact.statelessComponent("Game");
 
 module Styles = {
   open Css;
@@ -27,11 +27,14 @@ module Styles = {
     ]);
 };
 
-let make = (~playerHand, ~dealerHand, _children) => {
+let make = (~game:Logic.game, ~send:(Logic.actions=>unit), _children) => {
   ...component,
   render: _self =>
     <div className=Styles.board>
-      <Hand hand=dealerHand />
-      <Hand hand=playerHand />
+      <Board
+        playerHand={Belt.List.toArray(game.board.playerHand)}
+        dealerHand={Belt.List.toArray(game.board.dealerHand)}
+      />
+      <ToolBar send=send game=game />
     </div>,
 };

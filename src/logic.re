@@ -151,19 +151,26 @@ let runDealerTurn = game: game =>
 let findWinner = board => {
   let playerTotal = calculateHand(board.playerHand);
   let dealerTotal = calculateHand(board.dealerHand);
-  if (playerTotal > dealerTotal) {
-    if (playerTotal <= maxValue) {
-      PlayerWin;
-    } else {
-      DealerWin;
-    };
-  } else if (dealerTotal <= maxValue) {
-    DealerWin;
+  if (playerTotal == dealerTotal) {
+    Push
   } else {
-    PlayerWin;
-  };
+    if (playerTotal > maxValue) {
+      PlayerBust
+    } else {
+      if (dealerTotal > maxValue) {
+        DealerBust
+      } else {
+        if (playerTotal > dealerTotal) {
+          PlayerWin
+        } else {
+          DealerWin
+        }
+      }
+    }
+  }
 };
-type actions =
+
+type actions = Deal
   | Hit
   | Stand
   | Split;
@@ -203,24 +210,19 @@ let runPlayerTurn = (game: game, action) =>
       let winner = findWinner(dealerGame.board);
       {
         ...dealerGame,
-        deck: dealerGame.deck,
-        gameState: winner,
-        board: {
-          ...dealerGame.board,
-          playerHand: dealerGame.board.playerHand,
-        },
+       gameState: winner,
       };
     };
   };
 
-  let canHit = gameState => {
-    switch(gameState) {
-    | PlayerTurn => true
+  let canHit = (game:game):bool => {
+    switch(game.gameState) {
+    | PlayerTurn  => true
     | _ => false
     };
   };
-  let canStand = gameState => {
-    switch(gameState) {
+  let canStand = (game:game):bool => {
+    switch(game.gameState) {
     | PlayerTurn => true
     | _ => false
     };

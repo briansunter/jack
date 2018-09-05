@@ -1,4 +1,0 @@
-#!/bin/sh
-
-npm run prod
-git add lib bundledOutputs

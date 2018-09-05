@@ -13,7 +13,7 @@ module Styles = {
       borderStyle(solid),
       borderRadius(px(5)),
       borderWidth(px(3)),
-      padding(px(10)),
+      padding(px(10))
     ]);
 
   let topStyle = style([display(flexBox)]);
