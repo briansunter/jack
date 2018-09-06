@@ -35,5 +35,6 @@ let make = _children => {
   render: ({state: {game}, send}) =>
     <div>
     <Game game=game send=send />
+  
     </div>,
 };

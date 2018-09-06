@@ -10,7 +10,7 @@ module Styles = {
       justifyContent(center),
       backgroundColor(darkolivegreen),
       minHeight(px(500)),
-    ]);
+      ]);
 
   let topStyle = style([display(flexBox)]);
 

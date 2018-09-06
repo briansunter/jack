@@ -1,3 +1,5 @@
+[%raw {|require('./main.css')|}];
+
 let component = ReasonReact.statelessComponent("Hand");
 
 module Styles = {
@@ -7,8 +9,7 @@ module Styles = {
     style([
       display(flexBox),
       justifyContent(center),
-      backgroundColor(darkolivegreen),
-      margin(px(10)),
+      flex(1)
     ]);
 
   let topStyle = style([display(flexBox)]);
@@ -30,14 +31,24 @@ module Styles = {
 let make = (~hand, _children) => {
   ...component,
   render: _self =>
-    <div className=Styles.hand>
-      {
-        ReasonReact.array(
-          Array.map(
-            (h: Logic.card) => <Card suit={h.suit} cardStyle={h.style} />,
+<Transition.TransitionGroup className={Styles.hand}>
+        {ReasonReact.array(
+          Array.mapi(
+            (i,h: Logic.card) => {
+        <Transition.Transition timeout=30 in_=true key={string_of_int(i)}>
+        ...((s) => { 
+          let flipped = switch(s) {
+          | Transition.Transition.Entering => false
+          | _ => true
+          };
+              <Card suit={h.suit} key={string_of_int(i)} cardStyle={h.style} flipped=flipped />
+        }
+        )
+        </Transition.Transition>
+             }, 
             hand,
           ),
-        )
-      }
-    </div>,
+        )}
+        </Transition.TransitionGroup>
 };
+/*{ReasonReact.string(Transition.Transition.stringOfState(s))} */

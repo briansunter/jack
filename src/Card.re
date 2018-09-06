@@ -2,19 +2,36 @@ let component = ReasonReact.statelessComponent("Card");
 
 module Styles = {
   open Css;
+  let card = [
+    display(flexBox),
+    flexDirection(column),
+    justifyContent(spaceBetween),
+    backgroundColor(white),
+    boxShadow(~y=px(4), ~blur=px(6), rgba(0, 0, 0, 0.3)),
+    borderStyle(solid),
+    borderRadius(px(5)),
+    borderWidth(px(3)),
+    padding(px(10)),
+  ];
 
-  let card =
-    style([
-      display(flexBox),
-      flexDirection(column),
-      justifyContent(spaceBetween),
-      backgroundColor(white),
-      boxShadow(~y=px(4), ~blur=px(6), rgba(0, 0, 0, 0.3)),
-      borderStyle(solid),
-      borderRadius(px(5)),
-      borderWidth(px(3)),
-      padding(px(10))
-    ]);
+  let cardFlipped =
+    style(
+      List.concat([
+        card,
+        [
+          transition(~duration=1000, "transform"),
+          transformStyle(`preserve3d),
+          transform(rotateY(deg(0))),
+        ],
+      ]),
+    );
+
+  let cardUnFlipped =
+    style(List.concat([card,[
+      transition(~duration=1000, "transform"),
+      transformStyle(`preserve3d),
+      transform(rotateY(deg(180))),
+    ]]));
 
   let topStyle = style([display(flexBox)]);
 
@@ -48,10 +65,11 @@ let suitToSymbol = suit =>
   | Logic.Spades => {js|\u2660|js}
   | Logic.Diamonds => {js|\u2666|js}
   };
-let make = (~suit, ~cardStyle, _children) => {
+let make = (~suit, ~cardStyle, ~flipped=true, _children) => {
   ...component,
   render: _self =>
-    <div className=Styles.card>
+    <div
+      className={if (flipped) {Styles.cardFlipped} else {Styles.cardUnFlipped}}>
       <div className=Styles.topStyle>
         <div> {ReasonReact.string(styleToString(cardStyle))} </div>
         <div> {ReasonReact.string(suitToSymbol(suit))} </div>
