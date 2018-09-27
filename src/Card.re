@@ -21,7 +21,7 @@ module Styles = {
       List.concat([
         card,
         [
-          transition(~duration=1500, "transform"),
+          transition(~duration=1000, "transform"),
           transformStyle(`preserve3d),
           transform(rotateY(deg(0))),
         ],
@@ -33,7 +33,7 @@ module Styles = {
       List.concat([
         card,
         [
-          transition(~duration=1500, "transform"),
+          transition(~duration=1000, "transform"),
           transformStyle(`preserve3d),
           transform(rotateY(deg(180))),
         ],
