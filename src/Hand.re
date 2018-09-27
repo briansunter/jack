@@ -5,12 +5,7 @@ let component = ReasonReact.statelessComponent("Hand");
 module Styles = {
   open Css;
 
-  let hand =
-    style([
-      display(flexBox),
-      justifyContent(center),
-      flex(1)
-    ]);
+  let hand = style([display(flexBox), justifyContent(center), flex(1)]);
 
   let topStyle = style([display(flexBox)]);
 
@@ -28,27 +23,37 @@ module Styles = {
     ]);
 };
 
-let make = (~hand, _children) => {
+let make = (~hand, ~hideSecondCard=false, _children) => {
   ...component,
   render: _self =>
-<Transition.TransitionGroup className={Styles.hand}>
-        {ReasonReact.array(
+    <Transition.TransitionGroup className=Styles.hand>
+      {
+        ReasonReact.array(
           Array.mapi(
-            (i,h: Logic.card) => {
-        <Transition.Transition timeout=30 in_=true key={string_of_int(i)}>
-        ...((s) => { 
-          let flipped = switch(s) {
-          | Transition.Transition.Entering => false
-          | _ => true
-          };
-              <Card suit={h.suit} key={string_of_int(i)} cardStyle={h.style} flipped=flipped />
-        }
-        )
-        </Transition.Transition>
-             }, 
+            (i, h: Logic.card) =>
+              <Transition.Transition
+                timeout=20 in_=true key={string_of_int(i)}>
+                ...{
+                     s => {
+                       let flipped =
+                         switch (s) {
+                         | Transition.Transition.Entering => false
+                         | _ => true
+                         };
+
+                       <Card
+                         suit={h.suit}
+                         key={string_of_int(i)}
+                         cardStyle={h.style}
+                         flipped
+                       />;
+                     }
+                   }
+              </Transition.Transition>,
             hand,
           ),
-        )}
-        </Transition.TransitionGroup>
+        )
+      }
+    </Transition.TransitionGroup>,
 };
 /*{ReasonReact.string(Transition.Transition.stringOfState(s))} */
