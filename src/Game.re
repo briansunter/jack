@@ -10,11 +10,12 @@ module Styles = {
       justifyContent(center),
       backgroundColor(darkolivegreen),
       minHeight(px(500)),
-      ]);
+    ]);
 
   let topStyle = style([display(flexBox)]);
 
-  let middleStyle = style([display(flexBox), justifyContent(center), fontSize(px(100))]);
+  let middleStyle =
+    style([display(flexBox), justifyContent(center), fontSize(px(100))]);
 
   let bottomStyle = style([display(flexBox), justifyContent(flexEnd)]);
 
@@ -27,14 +28,18 @@ module Styles = {
     ]);
 };
 
-let make = (~game:Logic.game, ~send:(Logic.actions=>unit), _children) => {
+let make = (~game: Logic.game, ~send: Logic.actions => unit, _children) => {
   ...component,
   render: _self =>
     <div className=Styles.board>
       <Board
-        playerHand={Belt.List.toArray(game.board.playerHand)}
-        dealerHand={Belt.List.toArray(game.board.dealerHand)}
+        playerHand={
+          Belt.Array.reverse(Belt.List.toArray(game.board.playerHand))
+        }
+        dealerHand={
+          Belt.Array.reverse(Belt.List.toArray(game.board.dealerHand))
+        }
       />
-      <ToolBar send=send game=game />
+      <ToolBar send game />
     </div>,
 };
