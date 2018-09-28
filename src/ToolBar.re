@@ -3,13 +3,9 @@ let component = ReasonReact.statelessComponent("ToolBar");
 module Styles = {
   open Css;
 
-  let toolBar =
-    style([
-      display(flexBox),
-      flexDirection(column),
-    ]);
+  let toolBar = style([display(flexBox), flexDirection(column)]);
 
-  let toolBarRow=
+  let toolBarRow =
     style([
       display(flexBox),
       flexDirection(row),
@@ -19,18 +15,24 @@ module Styles = {
       margin(px(10)),
     ]);
 
-    let toolBarItem =
-    style([flexGrow(1),
-    width(pct(100.0)),
-    minHeight(pt(50)),
-    backgroundColor(white),
-    textAlign(center),
-    alignItems(center)
+  let toolBarItem =
+    style([
+      display(`flex),
+      flexDirection(`column),
+      alignItems(`center),
+      justifyContent(`center),
+      flexGrow(1),
+      width(pct(100.0)),
+      minHeight(pt(50)),
+      backgroundColor(white),
+      textAlign(center),
+      alignItems(center),
     ]);
 
   let topStyle = style([display(flexBox)]);
 
-  let middleStyle = style([display(flexBox), justifyContent(center), fontSize(px(100))]);
+  let middleStyle =
+    style([display(flexBox), justifyContent(center), fontSize(px(100))]);
 
   let bottomStyle = style([display(flexBox), justifyContent(flexEnd)]);
 
@@ -43,51 +45,58 @@ module Styles = {
     ]);
 };
 
-let gameStateToString = (state:Logic.gameState):string => 
-switch(state) {
-| NewGame => "New Game"
-| PlayerTurn => "Player Turn"
-| Blackjack => "Blackjack"
-| Push => "Push"
-| PlayerBust => "Player Bust"
-| DealerBust => "Dealer Bust"
-| DealerTurn => "Dealer Turn"
-| PlayerWin => "Player Win"
-| DealerBlackjack => "Dealer Blackjack"
-| DealerWin => "Dealer Win";
-};
+let gameStateToString = (state: Logic.gameState): string =>
+  switch (state) {
+  | NewGame => "New Game"
+  | PlayerTurn => "Player Turn"
+  | Blackjack => "Blackjack"
+  | Push => "Push"
+  | PlayerBust => "Player Bust"
+  | DealerBust => "Dealer Bust"
+  | DealerTurn => "Dealer Turn"
+  | PlayerWin => "Player Win"
+  | DealerBlackjack => "Dealer Blackjack"
+  | DealerWin => "Dealer Win"
+  };
 
-let make = (~send:(Logic.actions=>unit),~game:Logic.game, _children) => {
+let make = (~send: Logic.actions => unit, ~game: Logic.game, _children) => {
   ...component,
   render: _self =>
     <div className=Styles.toolBarRow>
       /* <Hand hand=dealerHand />
-      <Hand hand=playerHand /> */
-      <div className=Styles.toolBarItem> 
-          <p>{ReasonReact.string(gameStateToString(game.gameState))}</p>
-     </div>
-      <div className=Styles.toolBarItem>
-        <button 
-        className=Styles.toolBarItem 
-        onClick={_ => send(Logic.Deal)}>
-          {ReasonReact.string("Deal Cards")}
-        </button>
-      </div>
-      <div className=Styles.toolBarItem>
-        <button 
-        className=Styles.toolBarItem 
-        onClick={_ => send(Logic.Hit)} 
-        disabled={! Logic.canHit(game)}>
-          {ReasonReact.string("Hit Me")}
-        </button>
-      </div>
-      <div className=Styles.toolBarItem>
-        <button 
-        className=Styles.toolBarItem 
-        onClick={_ => send(Logic.Stand)} 
-        disabled={! Logic.canStand(game)}>
-          {ReasonReact.string("Stand")}
-        </button>
-      </div>
-    </div>,
+         <Hand hand=playerHand /> */
+
+        <div className=Styles.toolBarItem>
+          <h3> {ReasonReact.string(gameStateToString(game.gameState))} </h3>
+          <h3>
+            {
+              ReasonReact.string(
+                string_of_int(Logic.calculateHand(game.board.playerHand)),
+              )
+            }
+          </h3>
+        </div>
+        <div className=Styles.toolBarItem>
+          <button
+            className=Styles.toolBarItem onClick={_ => send(Logic.Deal)}>
+            <h3> {ReasonReact.string("Deal Cards")} </h3>
+          </button>
+        </div>
+        <div className=Styles.toolBarItem>
+          <button
+            className=Styles.toolBarItem
+            onClick={_ => send(Logic.Hit)}
+            disabled={!Logic.canHit(game)}>
+            <h3> {ReasonReact.string("Hit Me")} </h3>
+          </button>
+        </div>
+        <div className=Styles.toolBarItem>
+          <button
+            className=Styles.toolBarItem
+            onClick={_ => send(Logic.Stand)}
+            disabled={!Logic.canStand(game)}>
+            <h3> {ReasonReact.string("Stand")} </h3>
+          </button>
+        </div>
+      </div>,
 };
