@@ -32,7 +32,11 @@ let make = (~hand, ~hideSecondCard=false, _children) => {
           Array.mapi(
             (i, h: Logic.card) =>
               <Transition.Transition
-                timeout=20 in_=true key={string_of_int(i)}>
+                timeout=20
+                in_=true
+                key={
+                  Logic.suitToString(h.suit) ++ Logic.styleToString(h.style)
+                }>
                 ...{
                      s => {
                        let flipped =
@@ -43,7 +47,10 @@ let make = (~hand, ~hideSecondCard=false, _children) => {
 
                        <Card
                          suit={h.suit}
-                         key={string_of_int(i)}
+                         key={
+                           Logic.suitToString(h.suit)
+                           ++ Logic.styleToString(h.style)
+                         }
                          cardStyle={h.style}
                          flipped
                        />;

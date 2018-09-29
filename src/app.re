@@ -1,9 +1,8 @@
-
 type state = {game: Logic.game};
 
-let component = ReasonReact.reducerComponent("MyCounter");
+let component = ReasonReact.reducerComponent("Blackjack");
 
-let appReducer = (action:Logic.actions, state) =>
+let appReducer = (action: Logic.actions, state) =>
   switch (action) {
   | Logic.Deal =>
     ReasonReact.Update({...state, game: Logic.dealInitialcards(state.game)})
@@ -32,9 +31,5 @@ let make = _children => {
     };
   },
   reducer: appReducer,
-  render: ({state: {game}, send}) =>
-    <div>
-    <Game game=game send=send />
-  
-    </div>,
+  render: ({state: {game}, send}) => <div> <Game game send /> </div>,
 };

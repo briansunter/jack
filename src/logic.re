@@ -1,6 +1,32 @@
-type suit = Hearts | Diamonds | Spades | Clubs;
+type suit =
+  | Hearts
+  | Diamonds
+  | Spades
+  | Clubs;
 
-type style = Ace | King | Queen | Jack | Simple(int);
+type style =
+  | Jack
+  | Queen
+  | King
+  | Ace
+  | Simple(int);
+
+let styleToString = style =>
+  switch (style) {
+  | Jack => "Jack"
+  | Queen => "Queen"
+  | King => "King"
+  | Ace => "Ace"
+  | Simple(x) => string_of_int(x)
+  };
+
+let suitToString = style =>
+  switch (style) {
+  | Hearts => "Jack"
+  | Diamonds => "Queen"
+  | Spades => "King"
+  | Clubs => "Ace"
+  };
 
 type card = {
   suit,
@@ -79,6 +105,20 @@ type gameState =
   | PlayerWin
   | DealerBlackjack
   | DealerWin;
+
+let gameStateToString = (state: gameState): string =>
+  switch (state) {
+  | NewGame => "New Game"
+  | PlayerTurn => "Player Turn"
+  | Blackjack => "Blackjack"
+  | Push => "Push"
+  | PlayerBust => "Player Bust"
+  | DealerBust => "Dealer Bust"
+  | DealerTurn => "Dealer Turn"
+  | PlayerWin => "Player Win"
+  | DealerBlackjack => "Dealer Blackjack"
+  | DealerWin => "Dealer Win"
+  };
 
 type game = {
   board,

@@ -45,20 +45,6 @@ module Styles = {
     ]);
 };
 
-let gameStateToString = (state: Logic.gameState): string =>
-  switch (state) {
-  | NewGame => "New Game"
-  | PlayerTurn => "Player Turn"
-  | Blackjack => "Blackjack"
-  | Push => "Push"
-  | PlayerBust => "Player Bust"
-  | DealerBust => "Dealer Bust"
-  | DealerTurn => "Dealer Turn"
-  | PlayerWin => "Player Win"
-  | DealerBlackjack => "Dealer Blackjack"
-  | DealerWin => "Dealer Win"
-  };
-
 let make = (~send: Logic.actions => unit, ~game: Logic.game, _children) => {
   ...component,
   render: _self =>
@@ -67,7 +53,9 @@ let make = (~send: Logic.actions => unit, ~game: Logic.game, _children) => {
          <Hand hand=playerHand /> */
 
         <div className=Styles.toolBarItem>
-          <h3> {ReasonReact.string(gameStateToString(game.gameState))} </h3>
+          <h3>
+            {ReasonReact.string(Logic.gameStateToString(game.gameState))}
+          </h3>
           <h3>
             {
               ReasonReact.string(
