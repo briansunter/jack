@@ -7,8 +7,7 @@ let component = ReasonReact.reducerComponent("Blackjack");
 
 let appReducer = (action: actions, state) =>
   switch (action) {
-  | Move(a) =>
-    ReasonReact.Update({...state, game: Logic.runPlayerTurn(state.game, a)})
+  | Move(a) => ReasonReact.Update({game: Logic.runPlayerTurn(state.game, a)})
   };
 
 let make = _children => {

@@ -132,7 +132,7 @@ type game = {
   gameState,
 };
 
-let dealInitialcards = game => {
+let dealInitialCards = game => {
   let [playerCard1, playerCard2, dealerCard1, dealerCard2, ...restDeck] =
     game.deck;
   let playerHand = [playerCard1, playerCard2];
@@ -218,16 +218,7 @@ type actions =
 
 let runPlayerTurn = (game: game, action) =>
   switch (action) {
-  | Deal =>
-    let [card1, card2, card3, card4] = game.deck;
-    {
-      ...game,
-      board: {
-        ...game.board,
-        playerHand: [card1, card2],
-        dealerHand: [card3, card4],
-      },
-    };
+  | Deal => dealInitialCards(game)
   | Hit =>
     let [newCard, ...restDeck] = game.deck;
     let newPlayerHand = [newCard, ...game.board.playerHand];
