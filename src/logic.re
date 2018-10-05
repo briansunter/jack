@@ -62,9 +62,7 @@ let calculateHand = hand => {
   let aces: hand = List.filter(({style}) => style == Ace, hand);
   let noAceHand: hand = List.filter(({style}) => style != Ace, hand);
 
-    let sumWithoutAces: int = noAceHand
-      |> List.map(cardValue)
-      |.(Belt.List.reduce(0, (+)));
+  let sumWithoutAces: int = noAceHand |> List.map(cardValue) |. Belt.List.reduce(0, (+));
 
   addAces(sumWithoutAces, aces);
 };
@@ -130,7 +128,17 @@ type game = {
   board,
   deck,
   gameState,
+  playerBet: float,
+  playerTotal: float,
 };
+
+let calculatePayout = (game: game): float =>
+  switch (game.gameState) {
+  | Push => game.playerBet
+  | Blackjack => game.playerBet *. 3.0 /. 2.0
+  | PlayerWin | DealerBust => game.playerBet *. 2.0
+  | _ => 0.0
+  };
 
 let dealInitialCards = game => {
   let [playerCard1, playerCard2, dealerCard1, dealerCard2, ...restDeck] =
@@ -144,7 +152,7 @@ let dealInitialCards = game => {
       PlayerTurn;
     };
 
-  {
+      let dealtGameState =  {
     ...game,
     deck: restDeck,
     gameState: initialGameState,
@@ -153,6 +161,7 @@ let dealInitialCards = game => {
       dealerHand,
     },
   };
+        {...dealtGameState, playerTotal: dealtGameState.playerTotal +. calculatePayout(dealtGameState) -. dealtGameState.playerBet}
 };
 
 let dealerHitValue = 17;
@@ -246,12 +255,14 @@ let runPlayerTurn = (game: game, action) =>
   | Stand =>
     let dealerGame = runDealerTurn(game);
 
-    if (dealerGame.gameState == DealerBust) {
+    let gameResult = if (dealerGame.gameState == DealerBust) {
       dealerGame;
     } else {
       let winner = findWinner(dealerGame.board);
       {...dealerGame, gameState: winner};
     };
+      {...gameResult, playerTotal: (game.playerTotal +. calculatePayout(gameResult))}
+
   };
 
 let canHit = (game: game): bool =>

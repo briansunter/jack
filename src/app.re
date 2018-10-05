@@ -1,13 +1,17 @@
 type actions =
   | Move(Logic.actions);
 
-type state = {game: Logic.game};
+type state = {
+  game: Logic.game,
+  playerBet: int,
+};
 
 let component = ReasonReact.reducerComponent("Blackjack");
 
 let appReducer = (action: actions, state) =>
   switch (action) {
-  | Move(a) => ReasonReact.Update({game: Logic.runPlayerTurn(state.game, a)})
+  | Move(a) =>
+    ReasonReact.Update({...state, game: Logic.runPlayerTurn(state.game, a)})
   };
 
 let make = _children => {
@@ -19,7 +23,10 @@ let make = _children => {
         deck: shuffledDeck,
         board: Logic.emptyBoard,
         gameState: Logic.NewGame,
+        playerBet: 200.0,
+        playerTotal: 10000.0,
       },
+      playerBet: 200,
     };
   },
   reducer: appReducer,

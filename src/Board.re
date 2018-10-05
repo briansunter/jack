@@ -9,7 +9,7 @@ module Styles = {
       flexDirection(column),
       justifyContent(center),
       backgroundColor(darkolivegreen),
-      minHeight(px(500)),
+      minHeight(vh(50.0)),
     ]);
 
   let topStyle = style([display(flexBox)]);

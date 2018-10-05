@@ -48,45 +48,56 @@ module Styles = {
 let make = (~send: Logic.actions => unit, ~game: Logic.game, _children) => {
   ...component,
   render: _self =>
-    <div className=Styles.toolBarRow>
-      /* <Hand hand=dealerHand />
-         <Hand hand=playerHand /> */
+    <div>
+      <div className=Styles.toolBarRow>
+        /* <Hand hand=dealerHand />
+           <Hand hand=playerHand /> */
 
+          <div className=Styles.toolBarItem>
+            <h3>
+              {ReasonReact.string(Logic.gameStateToString(game.gameState))}
+            </h3>
+            <h3>
+              {
+                ReasonReact.string(
+                  string_of_int(Logic.calculateHand(game.board.playerHand)),
+                )
+              }
+            </h3>
+          </div>
+          <div className=Styles.toolBarItem>
+            <button
+              className=Styles.toolBarItem
+              onClick={_ => send(Logic.Deal)}
+              disabled={!Logic.canDeal(game)}>
+              <h3> {ReasonReact.string("Deal Cards")} </h3>
+            </button>
+          </div>
+          <div className=Styles.toolBarItem>
+            <button
+              className=Styles.toolBarItem
+              onClick={_ => send(Logic.Hit)}
+              disabled={!Logic.canHit(game)}>
+              <h3> {ReasonReact.string("Hit Me")} </h3>
+            </button>
+          </div>
+          <div className=Styles.toolBarItem>
+            <button
+              className=Styles.toolBarItem
+              onClick={_ => send(Logic.Stand)}
+              disabled={!Logic.canStand(game)}>
+              <h3> {ReasonReact.string("Stand")} </h3>
+            </button>
+          </div>
+        </div>
+      <div className=Styles.toolBarRow>
         <div className=Styles.toolBarItem>
-          <h3>
-            {ReasonReact.string(Logic.gameStateToString(game.gameState))}
-          </h3>
-          <h3>
-            {
-              ReasonReact.string(
-                string_of_int(Logic.calculateHand(game.board.playerHand)),
-              )
-            }
-          </h3>
+          <h3> {ReasonReact.string(string_of_float(game.playerTotal))} </h3>
         </div>
         <div className=Styles.toolBarItem>
-          <button
-            className=Styles.toolBarItem
-            onClick={_ => send(Logic.Deal)}
-            disabled={!Logic.canDeal(game)}>
-            <h3> {ReasonReact.string("Deal Cards")} </h3>
-          </button>
+          <h3> {ReasonReact.string("Bet: ")} </h3>
+          <input _type="text" value={string_of_float(game.playerBet)} />
         </div>
-        <div className=Styles.toolBarItem>
-          <button
-            className=Styles.toolBarItem
-            onClick={_ => send(Logic.Hit)}
-            disabled={!Logic.canHit(game)}>
-            <h3> {ReasonReact.string("Hit Me")} </h3>
-          </button>
-        </div>
-        <div className=Styles.toolBarItem>
-          <button
-            className=Styles.toolBarItem
-            onClick={_ => send(Logic.Stand)}
-            disabled={!Logic.canStand(game)}>
-            <h3> {ReasonReact.string("Stand")} </h3>
-          </button>
-        </div>
-      </div>,
+      </div>
+    </div>,
 };
