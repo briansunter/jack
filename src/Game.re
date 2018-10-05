@@ -39,6 +39,7 @@ let make = (~game: Logic.game, ~send: Logic.actions => unit, _children) => {
         dealerHand={
           Belt.Array.reverse(Belt.List.toArray(game.board.dealerHand))
         }
+        gameState={game.gameState}
       />
       <ToolBar send game />
     </div>,

@@ -14,7 +14,8 @@ module Styles = {
 
   let topStyle = style([display(flexBox)]);
 
-  let middleStyle = style([display(flexBox), justifyContent(center), fontSize(px(100))]);
+  let middleStyle =
+    style([display(flexBox), justifyContent(center), fontSize(px(100))]);
 
   let bottomStyle = style([display(flexBox), justifyContent(flexEnd)]);
 
@@ -27,11 +28,20 @@ module Styles = {
     ]);
 };
 
-let make = (~playerHand, ~dealerHand, _children) => {
+let shouldHideDealerCard = gameState =>
+  switch (gameState) {
+  | Logic.PlayerTurn => true
+  | _ => false
+  };
+
+let make = (~playerHand, ~dealerHand, ~gameState, _children) => {
   ...component,
   render: _self =>
     <div className=Styles.board>
-      <Hand hand=dealerHand />
+      <Hand
+        hand=dealerHand
+        hideSecondCard={shouldHideDealerCard(gameState)}
+      />
       <Hand hand=playerHand />
     </div>,
 };

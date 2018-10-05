@@ -45,6 +45,17 @@ let make = (~hand, ~hideSecondCard=false, _children) => {
                          | _ => true
                          };
 
+                       let shouldFlip =
+                         if (hideSecondCard) {
+                           if (i == 1) {
+                             false;
+                           } else {
+                             flipped;
+                           };
+                         } else {
+                           flipped;
+                         };
+
                        <Card
                          suit={h.suit}
                          key={
@@ -52,7 +63,7 @@ let make = (~hand, ~hideSecondCard=false, _children) => {
                            ++ Logic.styleToString(h.style)
                          }
                          cardStyle={h.style}
-                         flipped
+                         flipped=shouldFlip
                        />;
                      }
                    }
