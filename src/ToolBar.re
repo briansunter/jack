@@ -66,7 +66,9 @@ let make = (~send: Logic.actions => unit, ~game: Logic.game, _children) => {
         </div>
         <div className=Styles.toolBarItem>
           <button
-            className=Styles.toolBarItem onClick={_ => send(Logic.Deal)}>
+            className=Styles.toolBarItem
+            onClick={_ => send(Logic.Deal)}
+            disabled={!Logic.canDeal(game)}>
             <h3> {ReasonReact.string("Deal Cards")} </h3>
           </button>
         </div>

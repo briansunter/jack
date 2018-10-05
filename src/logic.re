@@ -265,3 +265,9 @@ let canStand = (game: game): bool =>
   | PlayerTurn => true
   | _ => false
   };
+
+let canDeal = (game: game): bool =>
+  switch (game.gameState) {
+  | PlayerTurn => false
+  | _ => true
+  };
