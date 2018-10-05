@@ -1,3 +1,5 @@
+/* Caesars Palace	7	0.26	6	1.3	100	10000	s17,ds,ls,rsa */
+
 type suit =
   | Hearts
   | Diamonds
@@ -59,7 +61,11 @@ let addAces = (sumSoFar, aces) =>
 let calculateHand = hand => {
   let aces: hand = List.filter(({style}) => style == Ace, hand);
   let noAceHand: hand = List.filter(({style}) => style != Ace, hand);
-  let sumWithoutAces: int = noAceHand |> List.map(cardValue) |. Belt.List.reduce(0, (+));
+
+    let sumWithoutAces: int = noAceHand
+      |> List.map(cardValue)
+      |.(Belt.List.reduce(0, (+)));
+
   addAces(sumWithoutAces, aces);
 };
 
@@ -192,31 +198,36 @@ let findWinner = board => {
   let playerTotal = calculateHand(board.playerHand);
   let dealerTotal = calculateHand(board.dealerHand);
   if (playerTotal == dealerTotal) {
-    Push
+    Push;
+  } else if (playerTotal > maxValue) {
+    PlayerBust;
+  } else if (dealerTotal > maxValue) {
+    DealerBust;
+  } else if (playerTotal > dealerTotal) {
+    PlayerWin;
   } else {
-    if (playerTotal > maxValue) {
-      PlayerBust
-    } else {
-      if (dealerTotal > maxValue) {
-        DealerBust
-      } else {
-        if (playerTotal > dealerTotal) {
-          PlayerWin
-        } else {
-          DealerWin
-        }
-      }
-    }
-  }
+    DealerWin;
+  };
 };
 
-type actions = Deal
+type actions =
+  | Deal
   | Hit
   | Stand
   | Split;
 
 let runPlayerTurn = (game: game, action) =>
   switch (action) {
+  | Deal =>
+    let [card1, card2, card3, card4] = game.deck;
+    {
+      ...game,
+      board: {
+        ...game.board,
+        playerHand: [card1, card2],
+        dealerHand: [card3, card4],
+      },
+    };
   | Hit =>
     let [newCard, ...restDeck] = game.deck;
     let newPlayerHand = [newCard, ...game.board.playerHand];
@@ -248,22 +259,18 @@ let runPlayerTurn = (game: game, action) =>
       dealerGame;
     } else {
       let winner = findWinner(dealerGame.board);
-      {
-        ...dealerGame,
-       gameState: winner,
-      };
+      {...dealerGame, gameState: winner};
     };
   };
 
-  let canHit = (game:game):bool => {
-    switch(game.gameState) {
-    | PlayerTurn  => true
-    | _ => false
-    };
+let canHit = (game: game): bool =>
+  switch (game.gameState) {
+  | PlayerTurn => true
+  | _ => false
   };
-  let canStand = (game:game):bool => {
-    switch(game.gameState) {
-    | PlayerTurn => true
-    | _ => false
-    };
+
+let canStand = (game: game): bool =>
+  switch (game.gameState) {
+  | PlayerTurn => true
+  | _ => false
   };
