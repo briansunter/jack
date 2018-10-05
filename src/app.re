@@ -14,10 +14,22 @@ let appReducer = (action: actions, state) =>
     ReasonReact.Update({...state, game: Logic.runPlayerTurn(state.game, a)})
   };
 
+let rec range = (~start: int=0, end_: int) =>
+  if (start >= end_) {
+    [];
+  } else {
+    [start, ...range(~start=start + 1, end_)];
+  };
+
+let repeat = (times, l) =>
+  Belt.Array.map(ArrayLabels.of_list(range(times)), _ => l);
+
+let cycle = (times, l) => Belt.List.concatMany(repeat(times, l));
+
 let make = _children => {
   ...component,
   initialState: () => {
-    let shuffledDeck = Belt.List.shuffle(Logic.defaultDeck);
+    let shuffledDeck = Belt.List.shuffle(cycle(100, Logic.defaultDeck));
     {
       game: {
         deck: shuffledDeck,
