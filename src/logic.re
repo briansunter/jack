@@ -1,4 +1,5 @@
 /* Caesars Palace	7	0.26	6	1.3	100	10000	s17,ds,ls,rsa */
+open Utils;
 
 type suit =
   | Hearts
@@ -72,18 +73,12 @@ let testHand: hand = [
   {suit: Hearts, style: Simple(1)},
 ];
 
-let rec range = (start: int, end_: int) =>
-  if (start >= end_) {
-    [];
-  } else {
-    [start, ...range(start + 1, end_)];
-  };
-
 type deck = list(card);
 
 let suits = [Hearts, Clubs, Diamonds, Spades];
 let faceCards = [Ace, King, Queen, Jack];
-let simpleCards: list(style) = List.map(i => Simple(i), range(2, 10));
+let simpleCards: list(style) =
+  List.map(i => Simple(i), range(~start=2, 10));
 let styles: list(style) = List.append(faceCards, simpleCards);
 
 let defaultDeck: deck =
@@ -136,7 +131,8 @@ let calculatePayout = (game: game): float =>
   switch (game.gameState) {
   | Push => game.playerBet
   | Blackjack => game.playerBet *. 3.0 /. 2.0
-  | PlayerWin | DealerBust => game.playerBet *. 2.0
+  | PlayerWin
+  | DealerBust => game.playerBet *. 2.0
   | _ => 0.0
   };
 
@@ -152,7 +148,7 @@ let dealInitialCards = game => {
       PlayerTurn;
     };
 
-      let dealtGameState =  {
+  let dealtGameState = {
     ...game,
     deck: restDeck,
     gameState: initialGameState,
@@ -161,7 +157,13 @@ let dealInitialCards = game => {
       dealerHand,
     },
   };
-        {...dealtGameState, playerTotal: dealtGameState.playerTotal +. calculatePayout(dealtGameState) -. dealtGameState.playerBet}
+  {
+    ...dealtGameState,
+    playerTotal:
+      dealtGameState.playerTotal
+      +. calculatePayout(dealtGameState)
+      -. dealtGameState.playerBet,
+  };
 };
 
 let dealerHitValue = 17;
@@ -255,14 +257,17 @@ let runPlayerTurn = (game: game, action) =>
   | Stand =>
     let dealerGame = runDealerTurn(game);
 
-    let gameResult = if (dealerGame.gameState == DealerBust) {
-      dealerGame;
-    } else {
-      let winner = findWinner(dealerGame.board);
-      {...dealerGame, gameState: winner};
+    let gameResult =
+      if (dealerGame.gameState == DealerBust) {
+        dealerGame;
+      } else {
+        let winner = findWinner(dealerGame.board);
+        {...dealerGame, gameState: winner};
+      };
+    {
+      ...gameResult,
+      playerTotal: game.playerTotal +. calculatePayout(gameResult),
     };
-      {...gameResult, playerTotal: (game.playerTotal +. calculatePayout(gameResult))}
-
   };
 
 let canHit = (game: game): bool =>
